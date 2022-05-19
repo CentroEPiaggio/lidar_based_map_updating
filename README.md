@@ -1,16 +1,16 @@
 # lidar_based_map_updating
 Ros-Packages to update an occupancy grid map with lidar measurements.
 
-Abstract
+# Abstract
 Long-time operations of autonomous vehicles and mobile robots in logistics and service applications are still a challenge. To avoid a continuous re-mapping, the map can be updated to obtain a consistent representation of the current environment. In this paper, we propose a novel LIDAR-based occupancy grid map updating algorithm for dynamic environments taking into account possible localisation and measurement errors. The proposed approach allows robust long-term operations as it can detect changes in the working area even in presence of moving elements. Results highlighting \modified{map} quality and localisation performance, both in simulation and experiments, are reported.
 
 
 
-Requirements:
+# Requirements:
 - A localisation algorithm
 - An occupancy grid map 
 
-Algorithm parameters present in parameters.yaml in the folder param:
+# Algorithm parameters present in parameters.yaml in the folder param:
 
 changed_cells_topic: /changed_cells   name of the changed cells topic
 map_topic: /map                       name of the map topic 
@@ -28,8 +28,8 @@ map_updater:
 
   min_angle_increment: 0.1 #0.5  # expressed in degrees, it determines the considered beams number
 
-  # The pairing distance is taken as a function of the measured range R. In particular, it grows linearly with R until saturation is reached
-  # The configurable parameters are: saturation value and the desired pairing distance for two different range measurement
+  The pairing distance is taken as a function of the measured range R. In particular, it grows linearly with R until saturation is reached
+  The configurable parameters are: saturation value and the desired pairing distance for two different range measurement
   range_1_pair: 0.2
   pairing_distance_1: 0.15
   range_2_pair: 10.0
@@ -62,24 +62,24 @@ map_updater:
 
   max_anomalous_beam_fraction: 0.8
     
-  # For each anomalous point, a search for an occupied cell is performed within a circle centered in the hit point and with radius that grows linearly with the measured range
+  For each anomalous point, a search for an occupied cell is performed within a circle centered in the hit point and with radius that grows linearly with the measured range
   range_1_search: 0.0
   radius_1: 0.10
   range_2_search: 10.0
   radius_2: 0.2
 
 
-Launch folder:
+# Files in Launch folder:
 start_map_update.launch --> launch updating node
 monitor_consumption.launch --> launch cpu_monitor node
 update_bag --> launch updating node for bag file
 
 
-Input topic for the map updating algoritm:
+# Input topic for the map updating algoritm:
 - scan topic
 - map topic 
 - odom topic 
 
-Output topic:
+# Output topic:
 - updated map --> /processed_map
 - changed_cells_topic --> /changed_cells 
