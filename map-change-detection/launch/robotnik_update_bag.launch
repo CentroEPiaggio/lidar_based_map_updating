@@ -2,96 +2,21 @@
 <launch>
 
 <param name="/use_sim_time" value="true"/>
-	<arg name="gui" default="true"/>		<!-- launch rviz -->
-	<arg name="debug_visualization" default="false"/>
-    	<arg name="dynamic_amcl" default="false"/>
+<arg name="gui" default="true"/>		<!-- launch rviz -->
+<arg name="debug_visualization" default="false"/>
 
     
-<node pkg="rosbag" type="play" name="player" output="screen" args="--clock /home/elisa/Results/W4/mappa4.bag"/> 
-<node name="map_server" pkg="map_server" type="map_server" args="/home/elisa/Results/W3/M3_4.yaml"/>
-<!--<node name="map_server" pkg="map_server" type="map_server" args="/home/elisa/Results/W1/G1.yaml"/>-->
-
-    
-<!--<node pkg="rosbag" type="play" name="player" output="screen" args="clock /home/elisa/Results/W3/mappa3.bag"/> 
-<node name="map_server" pkg="map_server" type="map_server" args="/home/elisa/Results/W2/M2.yaml"/>
-
-    
-<node pkg="rosbag" type="play" name="player" output="screen" args="clock /home/elisa/Results/W4/mappa4.bag"/> 
-<node name="map_server" pkg="map_server" type="map_server" args="/home/elisa/Results/W3/M3.yaml"/>-->
-
-    
+<node pkg="rosbag" type="play" name="player" output="screen" args="--clock "/> 
 
 
-<node pkg="map_change_detection" type="odometry_publisher" name="odometry_publisher" output="screen"/>
+<rosparam file="$(find map_change_detection)/param/parameters.yaml" />
 
-<arg name="id_robot" default="robot"/>
-	<arg name="xacro_robot" default="summit_xls_std.urdf.xacro"/>
-<arg name="prefix" value="$(arg id_robot)_"/>
-
-<!-- Load the URDF into the ROS Parameter Server -->
-<param name="robot_description" command="$(find xacro)/xacro '$(find summit_xl_description)/robots/$(arg xacro_robot)' prefix:=$(arg prefix) --inorder"/>
-
-<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
-    <remap from="/joint_states" to="joint_states" />
+<node pkg="map_change_detection" name="map_updater" type="map_change_detection_node" output="screen">
+	<param name="visualize_on_rviz" value="$(arg gui)"/>
+	<param name="visualize_debug_stuff" value="$(arg debug_visualization)"/>
 </node>
-
-    <node pkg="map_change_detection" type="image_publisher" name="image_publisher" output="screen"/>
-
-<rosparam file="$(find map_change_detection)/real_robotnik_parameters.yaml" />
-
-  <node pkg="map_change_detection" name="map_updater" type="map_change_detection_node" output="screen">
-		<param name="visualize_on_rviz" value="$(arg gui)"/>
-		<param name="visualize_debug_stuff" value="$(arg debug_visualization)"/>
-	</node>
-		
-
-    <node pkg="map_change_detection" type="map_change_detection_processer_node" name="updated_map_processer" output="screen"/>
-    
-
-   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find map_change_detection)/rviz_config/map-updating.rviz"/>
-
-    
-
-	<!-- Initial pose passed to amcl -->
-      <!--W2 -1.805 1.862 0.336-->
-      <!--W4 -1.114 -4.309 3.058-->
-
-  
-
-<!--	<arg name="x0" default="1.7"/>
-	<arg name="y0" default="9.4"/>
-	<arg name="yaw0" default="-1.56" />-->
-<!--	<arg name="x0" default="1.572"/>
-	<arg name="y0" default="-2.244"/>
-	<arg name="yaw0" default="2.600" />-->
-    
-   <!--!3-->
-<!-- <arg name="x0" default="1.638"/>
-	<arg name="y0" default="-2.497"/>
-	<arg name="yaw0" default="2.600" />-->
-    
-     <arg name="x0" default="1.543"/>
-	<arg name="y0" default="-2.714"/>
-	<arg name="yaw0" default="2.600" />
-
-	<node pkg="amcl" type="amcl" name="amcl" output="screen">
-		<param name="initial_pose_x" value="$(arg x0)"/>  
-		<param name="initial_pose_y" value="$(arg y0)"/>
-		<param name="initial_pose_a" value="$(arg yaw0)"/>
-
-		<param name="online_map_updating" value="$(arg dynamic_amcl)"/>
-		<remap from="/scan" to="/robot/merged_laser/scan"/>
-
-	</node>
-
-
-	<arg name="monitor_consumption" default="true"/>
-	<arg name="poll_period" default="1.0"/>
-	<group if="$(arg monitor_consumption)">
-		<node pkg="cpu_monitor" name="cpu_monitor" type="monitor.py" output="screen">
-		<param name="poll_period" value="$(arg poll_period)"/>
-		</node>
-	</group>
-
+	
+<node pkg="map_change_detection" type="map_change_detection_processer_node" name="updated_map_processer" output="screen"/>
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find map_change_detection)/rviz_config/map-updating.rviz"/>
+	
 </launch>
-
