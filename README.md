@@ -71,9 +71,9 @@ Long-time operations of autonomous vehicles and mobile robots in logistics and s
 
 
 # Files in Launch folder:
-start_map_update.launch --> launch updating node
-monitor_consumption.launch --> launch cpu_monitor node
-update_bag --> launch updating node for bag file
+- start_map_update.launch --> launch updating node
+- monitor_consumption.launch --> launch cpu_monitor node
+- update_bag --> launch updating node for bag file
 
 
 # Input topic for the map updating algoritm:
