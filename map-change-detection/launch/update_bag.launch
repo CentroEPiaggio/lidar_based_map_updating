@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+
+<param name="/use_sim_time" value="true"/>
+<arg name="gui" default="true"/>		<!-- launch rviz -->
+<arg name="debug_visualization" default="false"/>
+
+    
+<node pkg="rosbag" type="play" name="player" output="screen" args="--clock "/> 
+
+
+<rosparam file="$(find map_change_detection)/param/parameters.yaml" />
+
+<node pkg="map_change_detection" name="map_updater" type="map_change_detection_node" output="screen">
+	<param name="visualize_on_rviz" value="$(arg gui)"/>
+	<param name="visualize_debug_stuff" value="$(arg debug_visualization)"/>
+</node>
+	
+<node pkg="map_change_detection" type="map_change_detection_processer_node" name="updated_map_processer" output="screen"/>
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find map_change_detection)/rviz_config/map-updating.rviz"/>
+	
+</launch>
